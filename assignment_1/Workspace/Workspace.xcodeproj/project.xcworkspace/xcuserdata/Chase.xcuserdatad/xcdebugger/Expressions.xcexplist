@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "coins:main.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "(dollar_input - floor(dollar_input/1))">
+            </PersistentString>
+            <PersistentString
+               value = "(dollar_input - floor(dollar_input/1)) * 100">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "cash:main.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "round((dollar_input - floor(dollar_input/1)) * 100)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
