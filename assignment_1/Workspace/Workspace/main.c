@@ -9,6 +9,7 @@
 #include "cs50.h"
 #include <stdio.h>
 #include <math.h>
+#include <stdbool.h>
 
 void hello(void) {
     printf("--- 'Hello' Assignment ---\nAsks user for name, prints 'hello, *name*'.\n");
@@ -43,42 +44,35 @@ void mario(void) {
 void cash(void) {
     printf("\n--- 'Cash' Assignment ---\nTells user what is the least number of coins required to return proper change.\n");
     
-    // Get input and convert to int representing just the coin change
     float dollar_input;
     int coin_only;
     do
     {
         dollar_input = get_float("Change owed: ");
-    } while (dollar_input<0);
-    coin_only = round((dollar_input - floor(dollar_input/1)) * 100);
+    } while (dollar_input<0);                                       // Input must be greater than 0
+    coin_only = round((dollar_input - floor(dollar_input)) * 100);  // Strip whole dollarts
     
+    // Find coins
     int num_coins = 0;
-    // Quarters
-    while (coin_only - 25 >= 0)
-    {
-        coin_only -= 25;
-        num_coins++;
+    int denominations[] = {25, 10, 5};
+    
+    for (int i = 0; i < 3; i++) {
+        
+        num_coins += coin_only/denominations[i];
+        coin_only = coin_only%denominations[i];
     }
-    // Dimes
-    while (coin_only - 10 >= 0)
-    {
-        coin_only -= 10;
-        num_coins++;
-    }
-    // Nickels
-    while (coin_only - 5 >= 0)
-    {
-        coin_only -= 25;
-        num_coins++;
-    }
-    // Pennies
-    while (coin_only - 1 >= 0)
-    {
-        coin_only -= 1;
-        num_coins++;
-    }
+    num_coins += coin_only;
+    
     printf("%i\n", num_coins);
+}
 
+int sum_product_digits(int x) {
+    int digit_sum = 0;
+    while (x % 10 > 0) {
+        digit_sum += x % 10;
+        x = x/10;
+    }
+    return digit_sum;
 }
 
 string credit(void){
@@ -88,35 +82,23 @@ string credit(void){
     long cc_number;
     cc_number = get_long("Number: ");
     
-    int multbool = 0;
-    int multnumber = 0;
+    bool multiply = false;
     int numbertotal = 0;
     long newccnumber = cc_number;
     
     // Iterate through CC number digits, add and multiply as per algorithm
     while (newccnumber / 10 > 0 || newccnumber % 10 > 0.9)
     {
-        if (multbool == 0)
-        {
+        if (multiply) {
+            numbertotal += sum_product_digits((newccnumber % 10) * 2);
+            
+        } else {
             numbertotal += newccnumber % 10;
-        } else
-        {
-            multnumber += (newccnumber % 10) * 2;
-            while (multnumber % 10 > 0) {
-                numbertotal += multnumber % 10;
-                multnumber = floor(multnumber/10);
             }
-        }
         newccnumber = floor(newccnumber/10);
         
-        //Flip multbool value
-        if (multbool == 0)
-        {
-            multbool = 1;
-        } else
-        {
-            multbool = 0;
-        }
+        //Flip multiply value
+        multiply = !multiply;
     }
     
     // Check Luhn's Algorithm
@@ -147,10 +129,9 @@ string credit(void){
 
 
 int main(void) {
-    //hello();
-   // mario();
-   // cash();
-    string cc_type = credit();
-    printf("%s", cc_type);
+    hello();
+    mario();
+    cash();
+    printf("%s", credit());
     return 0;
 }

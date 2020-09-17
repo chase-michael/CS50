@@ -6,10 +6,10 @@
          contextName = "coins:main.c">
          <PersistentStrings>
             <PersistentString
-               value = "(dollar_input - floor(dollar_input/1))">
+               value = "(dollar_input - floor(dollar_input/1)) * 100">
             </PersistentString>
             <PersistentString
-               value = "(dollar_input - floor(dollar_input/1)) * 100">
+               value = "(dollar_input - floor(dollar_input/1))">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -17,7 +17,10 @@
          contextName = "cash:main.c">
          <PersistentStrings>
             <PersistentString
-               value = "round((dollar_input - floor(dollar_input/1)) * 100)">
+               value = "coin_only%denominations[i]">
+            </PersistentString>
+            <PersistentString
+               value = "round((dollar_input - floor(dollar_input)) * 100)">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
