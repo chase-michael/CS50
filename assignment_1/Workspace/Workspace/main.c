@@ -19,7 +19,7 @@ void hello(void) {
 }
 
 
-void mario(void) {
+void mario() {
     printf("\n--- 'Mario' (difficult version) Assignment ---\nAsks for number of rows, prints special hash pyramid.\n");
     
     int height = get_int("Height: ");
@@ -41,7 +41,7 @@ void mario(void) {
 }
 
 
-void cash(void) {
+void cash() {
     printf("\n--- 'Cash' Assignment ---\nTells user what is the least number of coins required to return proper change.\n");
     
     float dollar_input;
@@ -66,69 +66,66 @@ void cash(void) {
     printf("%i\n", num_coins);
 }
 
+
 int sum_product_digits(int x) {
     int digit_sum = 0;
-    while (x % 10 > 0) {
+    while (x > 0) {
         digit_sum += x % 10;
         x = x/10;
     }
     return digit_sum;
 }
 
-string credit(void){
-    printf("\n--- 'Credit' Assignment ---\nPrints whether the CC number entered is valid and what type of CC it is.\nOnly accepts MIT specs for CC numbers:\nVISA: 13 or 16 digits, begins with 4\nMASTERCARD: 16 digits, begins with 5 \n       *** MC DOES NOT CURRENTLY WORK\nAMEX: 15 digits, begins with 3\n\n");
-    
-    // Get CC number
-    long cc_number;
-    cc_number = get_long("Number: ");
-    
+
+bool validate_luhns(long card_number) {
     bool multiply = false;
     int numbertotal = 0;
-    long newccnumber = cc_number;
     
-    // Iterate through CC number digits, add and multiply as per algorithm
-    while (newccnumber / 10 > 0 || newccnumber % 10 > 0.9)
-    {
-        if (multiply) {
-            numbertotal += sum_product_digits((newccnumber % 10) * 2);
-            
-        } else {
-            numbertotal += newccnumber % 10;
-            }
-        newccnumber = floor(newccnumber/10);
+    while (card_number > 0) {
+        if (multiply)
+            numbertotal += sum_product_digits((card_number % 10) * 2);
+        else
+            numbertotal += card_number % 10;
+        card_number = card_number/10;
         
-        //Flip multiply value
         multiply = !multiply;
     }
     
-    // Check Luhn's Algorithm
-    if (numbertotal % 10 != 0) {
-        return "INVALID\n";
-    }
+    return (numbertotal % 10 == 0);
+}
     
+    
+string get_cc_type(long card_number) {
     // Check if 13 digit Visa
-    if (cc_number / 10000000000000.0 < 1 && cc_number / 1000000000000 == 4) {
-        return "VISA\n";
-        }
+    int first_digit = (card_number / pow(10, 12));
+    if (first_digit == 4) return "VISA\n";
     
     // Check if Amex
-    if (cc_number / 1000000000000000.0 < 1 && cc_number / 100000000000000 == 3) {
-        return "AMEX\n";
-        }
+    first_digit = (card_number / pow(10, 14));
+    if (first_digit == 3) return "AMEX\n";
     
     // Check if MasterCard or 16 digit Visa or none
-    if (cc_number / 10000000000000000.0 < 1 && cc_number / 1000000000000000 == 5) {
-        return "MASTERCARD\n";
-    }
-    if (cc_number / 10000000000000000.0 < 1 && cc_number / 1000000000000000 == 4) {
-        return "VISA\n";
-    } else {
-        return "INVALID\n";
-    }
+    first_digit = (card_number / pow(10, 15));
+    if (first_digit == 5) return "MASTERCARD\n";
+    if (first_digit == 4) return "VISA\n";
+    
+    // Does not fall under any above criteria
+    return "INVALID\n";
 }
 
 
-int main(void) {
+string credit() {
+    printf("\n--- 'Credit' Assignment ---\nPrints whether the CC number entered is valid and what type of CC it is.\nOnly accepts CS50 specs for CC numbers:\nVISA: 13 or 16 digits, begins with 4\nMASTERCARD: 16 digits, begins with 5 \nAMEX: 15 digits, begins with 3\n\n");
+    
+    long cc_number;
+    cc_number = get_long("Number: ");
+    
+    if (validate_luhns(cc_number)) return get_cc_type(cc_number);
+    else return "INVALID\n";
+}
+
+
+int main() {
     hello();
     mario();
     cash();
